@@ -32,8 +32,9 @@
 
 
 
-									<?php $query=mysqli_query($con,"select fullName from users where id='".$_SESSION['id']."'");
-while($row=mysqli_fetch_array($query))
+									<?php $query=$db_query->get("select fullName from users where id=?",[$_SESSION['id']]);
+$rows = $db_query->get_records();
+foreach($rows as $row)
 {
 	echo $row['fullName'];
 }
