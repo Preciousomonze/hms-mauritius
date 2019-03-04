@@ -8,12 +8,20 @@ date_default_timezone_set('Asia/Kolkata');// change according timezone
 $currentTime = date( 'd-m-Y h:i:s A', time () );
 if(isset($_POST['submit']))
 {
-$sql=mysqli_query($con,"SELECT password FROM  users where password='".md5($_POST['cpass'])."' && id='".$_SESSION['id']."'");
-$num=mysqli_fetch_array($sql);
+$password = md5($_POST['cpass']);
+
+$sql=$db_query->get("SELECT password FROM users where password=? && id=?",[$password, $_SESSION['id']]);
+
+$num=$db_query->get_row_count();
 if($num>0)
 {
- $con=mysqli_query($con,"update users set password='".md5($_POST['npass'])."', updationDate='$currentTime' where id='".$_SESSION['id']."'");
-$_SESSION['msg1']="Password Changed Successfully !!";
+ //$con=mysqli_query($con,"update users set password='".md5($_POST['npass'])."', updationDate='$currentTime' where id='".$_SESSION['id']."'");
+$data_to_update = array('password'=>'?','updationDate'=>'?');
+$user_id = $_SESSION['id'];
+$data_to_bind = array($password,$currentTime,$user_id);
+$sql=$db_query->change("users",$data_to_update,"where id=?",$data_to_bind);
+
+ $_SESSION['msg1']="Password Changed Successfully !!";
 }
 else
 {
