@@ -1,0 +1,7 @@
+{
+ "autoload": {
+    "classmap": [
+     "code_vendors/pekky/DB"
+	  ]
+  }
+}
