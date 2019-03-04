@@ -8,7 +8,11 @@ $city=$_POST['city'];
 $gender=$_POST['gender'];
 $email=$_POST['email'];
 $password=md5($_POST['password']);
-$query=mysqli_query($con,"insert into users(fullname,address,city,gender,email,password) values('$fname','$address','$city','$gender','$email','$password')");
+//the Precious way, the pekky way
+$data_to_add = array('fullname'=>'?','address'=>'?','city'=>'?','gender'=>'?','email'=>'?','password'=>'?');
+$data_to_bind = array($fname,$address,$city,$gender,$email,$password);
+$query=$db_query->add("users",$data_to_add,$data_to_bind);
+//$query=mysqli_query($con,"insert into users(fullname,address,city,gender,email,password) values('$fname','$address','$city','$gender','$email','$password')");
 if($query)
 {
 	echo "<script>alert('Successfully Registered. You can login now');</script>";
