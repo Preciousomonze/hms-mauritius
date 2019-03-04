@@ -4,18 +4,26 @@ error_reporting(0);
 include("include/config.php");
 if(isset($_POST['submit']))
 {
-$ret=mysqli_query($con,"SELECT * FROM users WHERE email='".$_POST['username']."' and password='".md5($_POST['password'])."'");
-$num=mysqli_fetch_array($ret);
-if($num>0)
+//$ret=mysqli_query($con,"SELECT * FROM users WHERE email='".$_POST['username']."' and password='".md5($_POST['password'])."'");
+$ret=$db_query->get("SELECT * FROM users WHERE email=? and password=?",[$_POST['username'],md5($_POST['password'])]);
+//$num=mysqli_fetch_array($ret);
+$num=$db_query->get_records();
+$id = $num[0]['id'];
+//if($num>0)
+if(count($num) > 0)
 {
 $extra="dashboard.php";//
 $_SESSION['login']=$_POST['username'];
-$_SESSION['id']=$num['id'];
+$_SESSION['id']=$id;
 $host=$_SERVER['HTTP_HOST'];
 $uip=$_SERVER['REMOTE_ADDR'];
 $status=1;
 // For stroing log if user login successfull
-$log=mysqli_query($con,"insert into userlog(uid,username,userip,status) values('".$_SESSION['id']."','".$_SESSION['login']."','$uip','$status')");
+/*added my way*/
+$data_to_add = array('uid'=>'?','username'=>'?','userip'=>'?','status'=>'?');
+$data_to_bind = array($_SESSION['id'],$_SESSION['login'],$uip,$status);
+$log=$db_query->add("userlog",$data_to_add,$data_to_bind);
+//$log=mysqli_query($con,"insert into userlog(uid,username,userip,status) values('".$_SESSION['id']."','".$_SESSION['login']."','$uip','$status')");
 $uri=rtrim(dirname($_SERVER['PHP_SELF']),'/\\');
 header("location:http://$host$uri/$extra");
 exit();
@@ -26,7 +34,12 @@ else
 $_SESSION['login']=$_POST['username'];	
 $uip=$_SERVER['REMOTE_ADDR'];
 $status=0;
-mysqli_query($con,"insert into userlog(username,userip,status) values('".$_SESSION['login']."','$uip','$status')");
+/*added my way*/
+$data_to_add = array('username'=>'?','userip'=>'?','status'=>'?');
+$data_to_bind = array($_SESSION['login'],$uip,$status);
+$log=$db_query->add("userlog",$data_to_add,$data_to_bind);
+
+//mysqli_query($con,"insert into userlog(username,userip,status) values('".$_SESSION['login']."','$uip','$status')");
 $_SESSION['errmsg']="Invalid username or password";
 $extra="user-login.php";
 $host  = $_SERVER['HTTP_HOST'];
