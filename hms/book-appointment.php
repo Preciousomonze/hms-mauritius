@@ -16,9 +16,9 @@ $time=$_POST['apptime'];
 $userstatus=1;
 $docstatus=1;
 
-$data_to_add = array('doctorSpecialization'=>'?','doctorId'=>'?','userId'=>'?','consultancyFees'=>'?','appointmentDate'=>'?','userStatus'=>'?','doctorStatus'=>'?');
+$data_to_add = array('doctorSpecialization'=>'?','doctorId'=>'?','userId'=>'?','consultancyFees'=>'?','appointmentDate'=>'?','appointmentTime'=>'?','userStatus'=>'?','doctorStatus'=>'?');
 $data_to_bind = array($specilization,$doctorid,$userid,$fees,$appdate,$time,$userstatus,$docstatus);
-$query = $dbq->add('appointment',$data_to_add,$data_to_bind);
+$query = $db_query->add('appointment',$data_to_add,$data_to_bind);
 //$query=mysqli_query($con,"insert into appointment(doctorSpecialization,doctorId,userId,consultancyFees,appointmentDate,appointmentTime,userStatus,doctorStatus) values('$specilization','$doctorid','$userid','$fees','$appdate','$time','$userstatus','$docstatus')");
 	if($query)
 	{
@@ -26,6 +26,7 @@ $query = $dbq->add('appointment',$data_to_add,$data_to_bind);
 	}
 	else{
 		echo "<script>alert('failed');</script>";
+		echo $db_query->get_err_msg();
 	}
 
 }
@@ -138,11 +139,11 @@ function getfee(val) {
 <?php /*$ret=mysqli_query($con,"select * from doctorspecilization");
 while($row=mysqli_fetch_array($ret))
 {*/
-$ret = $dbq->get('Select * from doctorspecilization');
-$rows = $dbq->get_records();
+$ret = $db_query->get('Select * from doctorspecilization');
+$rows = $db_query->get_records();
 foreach($rows as $row){
 ?>
-																<option value="<?php echo htmlentities($row['specilization']);?>">
+																<option value="<?php echo htmlentities($row['id']);?>">
 																	<?php echo htmlentities($row['specilization']);?>
 																</option>
 																<?php } ?>
