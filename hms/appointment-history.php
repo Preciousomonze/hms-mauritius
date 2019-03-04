@@ -6,8 +6,11 @@ include('include/checklogin.php');
 check_login();
 if(isset($_GET['cancel']))
 		  {
-		          mysqli_query($con,"update appointment set userStatus='0' where id = '".$_GET['id']."'");
-                  $_SESSION['msg']="Your appointment canceled !!";
+			$data_to_change = array('userStatus'=>'0');
+			$data_to_bind = array($_GET['id']);
+			$db_query->change("appointment",$data_to_change,"where id =?",$data_to_bind);
+		    //mysqli_query($con,"update appointment set userStatus='0' where id = '".$_GET['id']."'");
+            $_SESSION['msg']="Your appointment canceled !!";
 		  }
 ?>
 <!DOCTYPE html>
@@ -87,9 +90,13 @@ if(isset($_GET['cancel']))
 										</thead>
 										<tbody>
 <?php
-$sql=mysqli_query($con,"select doctors.doctorName as docname,appointment.*  from appointment join doctors on doctors.id=appointment.doctorId where appointment.userId='".$_SESSION['id']."'");
+//$sql=mysqli_query($con,"select doctors.doctorName as docname.appointment.*  from appointment join doctors on doctors.id=appointment.doctorId where appointment.userId='".$_SESSION['id']."'");
+$sql=$db_query->get("select doctors.doctorName as docname,appointment.*  from appointment join doctors on doctors.id=appointment.doctorId where appointment.userId=?",[ $_SESSION['id'] ]);
 $cnt=1;
-while($row=mysqli_fetch_array($sql))
+//var_dump($db_query);
+$rows = $db_query->get_records();
+//while($row=mysqli_fetch_array($sql))
+foreach($rows as $row)
 {
 ?>
 

@@ -4,7 +4,7 @@ define('DB_USER','root');
 define('DB_PASS' ,'');
 define('DB_NAME', 'med_tolu_2');
 /* old school :)*/
-$con = mysqli_connect(DB_SERVER,DB_USER,DB_PASS,DB_NAME);/*
+//$con = mysqli_connect(DB_SERVER,DB_USER,DB_PASS,DB_NAME);/*
 // Check connection
 if (mysqli_connect_errno())
 {
