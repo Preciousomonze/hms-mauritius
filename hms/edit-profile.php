@@ -10,13 +10,14 @@ if(isset($_POST['submit']))
 $address=$_POST['address'];
 $city=$_POST['city'];
 $gender=$_POST['gender'];
-
-$sql=mysqli_query($con,"Update users set fullName='$fname',address='$address',city='$city',gender='$gender' where id='".$_SESSION['id']."'");
+$data_to_update = array('fullName'=>'?','address'=>'?','city'=>'?','gender'=>'?');
+$user_id = $_SESSION['id'];
+$data_to_bind = array($fname,$address,$city,$gender,$user_id);
+//$sql=$mysqli_query($con,"Update users set fullName='$fname',address='$address',city='$city',gender='$gender' where id='".$_SESSION['id']."'");
+$sql=$db_query->change("users",$data_to_update,"where id=?",$data_to_bind);
 if($sql)
 {
 $msg="Your Profile updated Successfully";
-
-
 }
 
 }
@@ -89,9 +90,12 @@ $msg="Your Profile updated Successfully";
 												</div>
 												<div class="panel-body">
 									<?php 
-$sql=mysqli_query($con,"select * from users where id='".$_SESSION['id']."'");
+/*$sql=mysqli_query($con,"select * from users where id='".$_SESSION['id']."'");
 while($data=mysqli_fetch_array($sql))
-{
+{*/
+$sql = $db_query->get("select * from users where id=?",[$_SESSION['id']]);
+$datas = $db_query->get_records();
+foreach($datas as $data){
 ?>
 													<form role="form" name="edit" method="post">
 													
